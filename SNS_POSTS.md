@@ -1,55 +1,49 @@
 # SNS copy / SNS投稿文
 
+## X recommended / X推奨文
+
+```markdown
+〖無料配布／ComfyUI〗
+長尺動画用AnimeSharpアップスケーラーを公開しました。
+
+よくある「全フレームを画像バッチ化」する構成ではなく、1フレームずつ拡大してFFmpegへ逐次書き込み。動画が長くなるほどRAMが膨らみ続ける問題を抑えます。
+
+✅ 元音声を最後まで維持
+✅ 日本語UI
+✅ MiniMax H3などの完成MP4に対応
+✅ 失敗時の不完全MP4を残しにくい
+
+28秒・672フレームの同一動画で、旧構成は約80GBで停止。本ワークフローは最大約2.31GBで完走しました。
+
+解説：
+https://note.com/happy_duck780/n/n0f190160e307
+
+配布：
+https://github.com/FURUYAN1234/comfyui-long-video-upscaler
+
+#ComfyUI #AnimeSharp #動画編集 #動画高画質化
+```
+
 ## X short / X短文
 
 ```markdown
 〖無料配布／ComfyUI〗
-長尺動画を1フレームずつ安全に2倍アップスケールするワークフローを公開しました。
+長尺動画用AnimeSharpアップスケーラーを公開。
 
-✅ 動画全体をRAMへ保持しない逐次処理
-✅ 元音声を最後まで維持
-✅ 日本語UI
-✅ MiniMax H3などの完成MP4へ使用可能
+全フレーム一括バッチではなく、1フレームずつ拡大→FFmpegへ逐次書き込み。28秒・672フレームの同一動画で、旧構成は約80GBで停止、本版は最大約2.31GBで完走。音声維持・日本語UI対応。
 
-28秒・672フレームを実処理。旧構成約80GB → 最大約2.31GBで完走。
+https://note.com/happy_duck780/n/n0f190160e307
 
-https://github.com/FURUYAN1234/comfyui-long-video-upscaler
-
-#ComfyUI #VideoUpscale #AnimeSharp #生成AI #AI動画
+#ComfyUI #AnimeSharp #動画編集
 ```
 
-## X detailed / X詳細版
+## X thread continuation / Xスレッド追記
 
 ```markdown
-MiniMax H3などで作った完成動画を、投稿前にもう少し高解像度化したい方向け。
-
-ComfyUI用「長尺動画AnimeSharpアップスケーラー」を無料公開しました。
-
-・1フレームずつ逐次処理
-・2倍出力
-・H.264／H.265
-・CRF、速度、タイルを日本語で変更
-・元動画の音声をAACで維持
-・失敗時の不完全MP4を削除
-
-実測：864×480 → 1728×960、24fps、28秒、672フレーム。RTX 5080／WSL2で約9分24秒、最大RAM約2.31GB。
-
-モデルはKim2091氏の4x-AnimeSharp（CC BY-NC-SA 4.0）を各自で取得してください。
-
-https://github.com/FURUYAN1234/comfyui-long-video-upscaler
-
-#ComfyUI #MiniMaxH3 #AnimeSharp #動画高画質化 #AI動画
-```
-
-## note announcement / note告知
-
-```markdown
-ComfyUIで長尺動画をメモリ安全に2倍高解像度化するワークフローを公開しました。
-
-通常の画像バッチ式で約80GBまで膨張してWSLが停止した問題を、1フレームずつ処理する専用ノードで修正。同じ28秒・672フレーム動画を最大約2.31GBで完走し、音声も最後まで維持しました。
-
-導入方法、AnimeSharpの取得先とライセンス、日本語設定、実測結果を記事にまとめています。
-
 GitHub：
 https://github.com/FURUYAN1234/comfyui-long-video-upscaler
+
+MiniMax H3、Wan、編集ソフトなどで完成したMP4を後処理する方式です。生成ワークフローを高解像度でやり直さず、投稿前の最終アップスケールに使えます。
+
+モデル：4x-AnimeSharp（Kim2091氏／CC BY-NC-SA 4.0、モデル本体は同梱していません）
 ```

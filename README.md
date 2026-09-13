@@ -2,6 +2,8 @@
 
 ![Workflow / ワークフロー](assets/workflow.png)
 
+[Read the release article on note / noteの公開記事を読む](https://note.com/happy_duck780/n/n0f190160e307)
+
 A low-memory ComfyUI workflow and dedicated custom node for upscaling completed videos one frame at a time while keeping the original audio. It is suitable for finished MiniMax H3 videos and other standard video files.
 / 完成済み動画を1フレームずつ低メモリで高解像度化し、元の音声を維持するComfyUIワークフローと専用カスタムノードです。MiniMax H3の完成動画を含む一般的な動画ファイルへ使用できます。
 
