@@ -1,0 +1,18 @@
+[project]
+name = "comfyui-long-video-upscaler"
+description = "Memory-safe sequential long-video upscaling with audio preservation for ComfyUI"
+version = "1.0.0"
+authors = [{ name = "FURUYAN1234" }]
+license = { file = "LICENSE" }
+dependencies = ["numpy>=1.24", "opencv-python>=4.8"]
+
+[project.urls]
+Repository = "https://github.com/FURUYAN1234/comfyui-long-video-upscaler"
+Documentation = "https://github.com/FURUYAN1234/comfyui-long-video-upscaler#readme"
+"Bug Tracker" = "https://github.com/FURUYAN1234/comfyui-long-video-upscaler/issues"
+
+[tool.comfy]
+PublisherId = "furuyan1234"
+DisplayName = "ComfyUI Long Video Upscaler"
+Icon = "https://raw.githubusercontent.com/FURUYAN1234/comfyui-long-video-upscaler/main/assets/note-thumbnail.png"
+includes = []

@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.pth
+*.pt
+*.safetensors
+*.onnx
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.wav
+*.mp3
+.env
+.env.*
