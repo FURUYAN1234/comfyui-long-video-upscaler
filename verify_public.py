@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-WORKFLOW = ROOT / 'workflows' / 'AnimeSharp_LongVideo_Safe_2x_20260913161014.json'
+WORKFLOW = ROOT / 'workflows' / 'AnimeSharp_LongVideo_Safe_2x_20260913200843.json'
 EXPECTED_HASH = 'e7a7de2dafd7331c1992862bbbcd9e9712a9f9f8e6303f0aaa59b4341d359bab'
 errors = []
 
@@ -20,9 +20,21 @@ for rel in required:
 
 doc = json.loads(WORKFLOW.read_text(encoding='utf-8'))
 node_types = [n.get('type') for n in doc.get('nodes', [])]
-for required_type in ['LoadVideo', 'UpscaleModelLoader', 'LongVideoUpscaleSafe']:
+for required_type in ['LoadVideo', 'UpscaleModelLoader', 'LongVideoUpscaleSafe', 'MarkdownNote']:
     if required_type not in node_types:
         errors.append(f'missing workflow node: {required_type}')
+
+guides = [n for n in doc.get('nodes', []) if n.get('type') == 'MarkdownNote']
+if len(guides) != 1:
+    errors.append('workflow must include exactly one visible bilingual guide node')
+guide_text = '\n'.join(str(n.get('widgets_values', '')) for n in guides)
+for phrase in ['処理構成 / PROCESSING FLOW', 'ファイル配置 / FILE LAYOUT', '変更できる設定 / USER CONTROLS', 'モデルと検証 / MODEL & VALIDATION']:
+    if phrase not in guide_text:
+        errors.append(f'missing bilingual guide section: {phrase}')
+if 'ComfyUI/' not in guide_text or 'custom_nodes/' not in guide_text or 'upscale_models/' not in guide_text:
+    errors.append('workflow file-layout diagram is incomplete')
+if not doc.get('extra', {}).get('ds'):
+    errors.append('workflow has no saved viewport for showing the guide cards')
 
 load = next(n for n in doc['nodes'] if n.get('type') == 'LoadVideo')
 if load.get('widgets_values', [None])[0] != 'input_video.mp4':
@@ -48,9 +60,13 @@ secret_patterns = [
     re.compile(r'OPENAI_API_KEY\s*[=:]\s*\S+', re.I)
 ]
 for path in ROOT.rglob('*'):
-    if '.git' in path.parts or not path.is_file() or path.suffix.lower() in {'.png', '.jpg', '.jpeg'} or path.name in {'LICENSE', 'verify_public.py'}:
+    if '.git' in path.parts or '__pycache__' in path.parts or not path.is_file() or path.suffix.lower() in {'.png', '.jpg', '.jpeg', '.pyc'} or path.name in {'LICENSE', 'verify_public.py'}:
         continue
-    text = path.read_text(encoding='utf-8')
+    try:
+        text = path.read_text(encoding='utf-8')
+    except UnicodeDecodeError:
+        errors.append(f'unexpected non-UTF-8 file: {path.relative_to(ROOT)}')
+        continue
     for pattern in secret_patterns:
         if pattern.search(text):
             errors.append(f'privacy/secret pattern in {path.relative_to(ROOT)}: {pattern.pattern}')

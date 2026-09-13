@@ -1,0 +1,203 @@
+{
+  "id": "6283fbe5-68ed-4c85-9661-1197b57a45a6",
+  "revision": 0,
+  "last_node_id": 4,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadVideo",
+      "pos": [
+        0,
+        -360
+      ],
+      "size": [
+        386,
+        510
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.16.4",
+        "Node name for S&R": "LoadVideo"
+      },
+      "widgets_values": [
+        "input_video.mp4",
+        "image"
+      ],
+      "title": "① 完成動画を選択 / Select a finished video"
+    },
+    {
+      "id": 2,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        450,
+        0
+      ],
+      "size": [
+        330,
+        70
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "UPSCALE_MODEL",
+          "type": "UPSCALE_MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.16.4",
+        "Node name for S&R": "UpscaleModelLoader",
+        "models": [
+          {
+            "name": "4x-AnimeSharp.pth",
+            "url": "https://huggingface.co/Kim2091/AnimeSharp/resolve/main/4x-AnimeSharp.pth",
+            "directory": "upscale_models"
+          }
+        ]
+      },
+      "widgets_values": [
+        "4x-AnimeSharp.pth"
+      ],
+      "title": "② 拡大モデル / Upscale model"
+    },
+    {
+      "id": 3,
+      "type": "LongVideoUpscaleSafe",
+      "pos": [
+        450,
+        -360
+      ],
+      "size": [
+        440,
+        330
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "動画",
+          "type": "VIDEO",
+          "link": 1
+        },
+        {
+          "name": "アップスケールモデル",
+          "type": "UPSCALE_MODEL",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "出力ファイルパス",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-long-video-upscaler",
+        "aux_id": "FURUYAN1234/comfyui-long-video-upscaler",
+        "ver": "1.0.0",
+        "Node name for S&R": "LongVideoUpscaleSafe"
+      },
+      "widgets_values": [
+        2.0,
+        "video/AnimeSharp_2x/AnimeSharp_2x",
+        "h264",
+        18,
+        "fast",
+        512
+      ],
+      "title": "③ 長尺動画を安全に2倍化 / Safe long-video upscale"
+    },
+    {
+      "id": 4,
+      "type": "MarkdownNote",
+      "pos": [
+        -720,
+        -440
+      ],
+      "size": [
+        640,
+        680
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "📘 使い方・構成・配置 / GUIDE・FLOW・FILES",
+      "properties": {},
+      "widgets_values": [
+        "# 概要 / OVERVIEW\n完成済みMP4を1フレームずつ拡大し、元音声を維持します。\nUpscales a finished MP4 one frame at a time and preserves its audio.\nMiniMax H3等の生成後に使う後処理です / Post-processing after H3 or other generators.\n\n## 使い方 / QUICK START\n1. ① 完成動画を選択 / Select a finished video.\n2. ② 4x-AnimeSharp.pthを選択 / Select the upscale model.\n3. ③ 初回は2.0x・H.264・CRF18・fast・tile512で実行 / Run with the defaults.\n4. 完成MP4を最後まで映像・音声確認 / Review the entire output video and audio.\n\n## 処理構成 / PROCESSING FLOW\n[完成MP4 / Finished MP4] ─video→ [1枚ずつ拡大 / frame upscale] ─→ [FFmpeg逐次書込 / stream write]\n             └────────audio────────→ [AAC] ──────────────────────────┘\n                                                ↓\n                                      [完成MP4 / Finished MP4]\n全フレームを1つの巨大な画像バッチとして保持しません。\nThe complete video is never held as one large image batch.\n\n## ファイル配置 / FILE LAYOUT\nComfyUI/\n├─ custom_nodes/comfyui-long-video-upscaler/   ← このリポジトリ / this repo\n├─ models/upscale_models/4x-AnimeSharp.pth     ← 各自取得 / download separately\n├─ input/input_video.mp4                       ← 入力例 / example input\n└─ output/video/AnimeSharp_2x/*.mp4            ← 完成動画 / finished output\n\n## 変更できる設定 / USER CONTROLS\n倍率 / Scale: 1.0-4.0（推奨 / start: 2.0）\nコーデック / Codec: H.264=互換性 / compatibility, H.265=小容量 / smaller files\nCRF: 小さいほど高画質・大容量 / Lower is higher quality and larger（推奨 / start: 18）\nPreset: fast推奨 / start at fast   Tile: 512→256→128（VRAM不足時 / on VRAM limits）\n保存名 / Output prefix: ComfyUI/output以下の相対パス / relative to ComfyUI/output\n\n## モデルと検証 / MODEL & VALIDATION\n4x-AnimeSharp by Kim2091 / CC BY-NC-SA 4.0 / モデル本体は非同梱 / model not bundled\n同じ28秒・672フレーム：旧全バッチ構成 約80GBで停止 → 本版 最大RSS 2,312.4 MiBで完走\nSame 28 s / 672 frames: old full batch stopped at about 80 GB; this node completed at 2,312.4 MiB peak RSS.\n実測は環境で変わります / Measurements vary by system.\n\n詳細ガイド / FULL GUIDE\nnote.com/happy_duck780/n/n0f190160e307\ngithub.com/FURUYAN1234/comfyui-long-video-upscaler"
+      ],
+      "color": "#24465c",
+      "bgcolor": "#142b39"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      0,
+      "VIDEO"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      1,
+      "UPSCALE_MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "▶ 実行する3ノード / THREE NODES TO RUN",
+      "bounding": [
+        -40,
+        -440,
+        950,
+        560
+      ],
+      "color": "#3f789e",
+      "font_size": 28,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "frontendVersion": "1.51.10",
+    "ds": {
+      "scale": 0.4,
+      "offset": [
+        908,
+        665
+      ]
+    }
+  },
+  "version": 0.4
+}

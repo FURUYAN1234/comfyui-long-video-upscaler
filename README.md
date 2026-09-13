@@ -25,6 +25,7 @@ A conventional video-upscale graph may expand the entire video into one image ba
 - **Audio preservation:** maps the source audio into the new MP4 and re-encodes it as AAC. / **音声維持：** 元動画の音声を新しいMP4へ割り当て、AACで再エンコードします。
 - **Exact output scale:** choose 1.0x to 4.0x; the included workflow defaults to 2.0x. / **出力倍率指定：** 1.0～4.0倍を指定でき、同梱ワークフローは2.0倍が初期値です。
 - **Japanese controls:** scale, file name, codec, CRF, preset, and tile size are labelled in Japanese. / **日本語設定：** 倍率、出力名、コーデック、CRF、速度、タイルサイズを日本語表示します。
+- **Guidance on the canvas:** one consolidated English/Japanese guide card explains the run order, processing map, editable settings, installation layout, model license, output, and measured validation. / **キャンバス内ガイド：** 1枚に統合した英日説明欄に、実行順、処理構成図、設定、導入先のファイル構成図、モデルライセンス、保存先、実測結果を記載しています。
 - **VRAM fallback:** if full-frame inference runs out of VRAM, tiled inference retries with progressively smaller tiles. / **VRAM不足時の分割処理：** 全画面推論でVRAM不足になった場合はタイルを段階的に縮小して再試行します。
 - **Safe output handling:** rejects paths outside `ComfyUI/output`, writes to a partial file, and renames it after success. / **安全な出力処理：** `ComfyUI/output` 外へのパスを拒否し、一時ファイルへ書いた後、成功時に完成名へ変更します。
 - **Local processing:** no cloud API, API key, or telemetry is used by this node. / **ローカル処理：** このノードはクラウドAPI、APIキー、テレメトリーを使用しません。
@@ -35,7 +36,7 @@ A conventional video-upscale graph may expand the entire video into one image ba
 comfyui-long-video-upscaler/
 ├─ __init__.py
 ├─ workflows/
-│  └─ AnimeSharp_LongVideo_Safe_2x_20260913161014.json
+│  └─ AnimeSharp_LongVideo_Safe_2x_20260913200843.json
 ├─ assets/
 │  ├─ workflow.png
 │  └─ note-thumbnail.png
@@ -51,6 +52,17 @@ comfyui-long-video-upscaler/
 
 The repository does not include model weights, input videos, generated videos, API keys, personal dictionaries, or development-machine paths.
 / このリポジトリには、モデル本体、入力動画、生成動画、APIキー、個人用辞書、開発PC固有パスを収録していません。
+
+## On-canvas documentation / ワークフロー内の説明欄
+
+The workflow opens with one consolidated bilingual Markdown guide on the left and the three executable nodes on the right, all inside the saved viewport. It uses ComfyUI's Markdown note, so the guide adds no custom-node dependency. The card keeps the practical overview on the canvas and links to the note article for the full explanation.
+/ ワークフローは、左に1枚へ統合した英日Markdown説明欄、右に実行する3ノードを置き、すべてが保存済み表示範囲に入る配置です。ComfyUIのMarkdown説明欄を使うため、ガイド表示用のカスタムノード依存は増えません。キャンバスには実用上必要な概要を残し、詳しい説明はnote記事へ誘導します。
+
+- Start here and run order. / 最初に読む手順と実行順。
+- Per-frame processing and audio flow diagram. / 1フレーム逐次処理と音声結合の構成図。
+- Editable settings with starting values. / 変更可能な設定と初期値。
+- `ComfyUI/custom_nodes`, `models/upscale_models`, `input`, and `output` file-layout diagram. / 導入先・モデル・入力・出力のファイル構成図。
+- Output behavior, license, and measured validation. / 保存動作、ライセンス、実測結果。
 
 ## Requirements / 必要環境
 
@@ -120,7 +132,7 @@ AnimeSharp is not bundled in this repository. Its license requires attribution, 
 
 ## Load and run the workflow / ワークフローの読み込みと実行
 
-1. Copy `workflows/AnimeSharp_LongVideo_Safe_2x_20260913161014.json` into any ComfyUI workflow folder, or drag it onto the ComfyUI canvas. / JSONを任意のComfyUIワークフローフォルダーへコピーするか、画面へドラッグします。
+1. Copy `workflows/AnimeSharp_LongVideo_Safe_2x_20260913200843.json` into any ComfyUI workflow folder, or drag it onto the ComfyUI canvas. / JSONを任意のComfyUIワークフローフォルダーへコピーするか、画面へドラッグします。
 2. In `ビデオを読み込む`, upload or select the completed source video. / `ビデオを読み込む`で完成済み動画をアップロードまたは選択します。
 3. Confirm that `4x-AnimeSharp.pth` is selected. / `4x-AnimeSharp.pth`が選択されていることを確認します。
 4. Start with the defaults: 2.0x, H.264, CRF 18, `fast`, tile 512. / 初回は2.0倍、H.264、CRF 18、`fast`、タイル512の初期値で実行します。

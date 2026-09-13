@@ -133,7 +133,7 @@ e7a7de2dafd7331c1992862bbbcd9e9712a9f9f8e6303f0aaa59b4341d359bab
 リポジトリの次のファイルをComfyUIへドラッグします。
 
 ```text
-workflows/AnimeSharp_LongVideo_Safe_2x_20260913161014.json
+workflows/AnimeSharp_LongVideo_Safe_2x_20260913200843.json
 ```
 
 ワークフロー内にも、導入、設定、モデル、保存先、実測結果の説明欄を配置しています。
