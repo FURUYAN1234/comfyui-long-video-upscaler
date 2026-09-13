@@ -22,7 +22,7 @@ https://github.com/FURUYAN1234/comfyui-long-video-upscaler
 0.5秒・12フレームのH.264／AAC動画を使った画面操作検証では、出力が1728×960、24fps、0.500秒になり、音声付きの完成動画を右ノード内で再生できることを確認しました。
 
 Release：
-https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/tag/v1.0.1
+https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest
 
 ## このワークフローならではのメリット
 
@@ -65,9 +65,9 @@ https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/tag/v1.0.1
 
 ## ワークフローの構成
 
-![入力選択後・変換前の操作見本](assets/workflow.png)
+![変換前のワークフロー全体見本](assets/workflow.png)
 
-右側の「③ 変換後動画をここで再生・保存」が、拡大変換・音声維持・MP4保存を行うLongVideoUpscaleSafeノードです。この画像は入力動画を選択した実行前の操作見本です。右下が空欄でも、変換ノードが欠けているわけではありません。実行が正常完了すると、③の下部に変換後動画のプレーヤーと保存先が表示されます。画像外の②モデル選択ノードで4x-AnimeSharp.pthを選択してから実行してください。
+右側の「③ 変換後動画をここで再生・保存」が、拡大変換・音声維持・MP4保存を行うLongVideoUpscaleSafeノードです。この画像は左の説明欄と右の実行領域を含む、入力動画を選択した実行前の全体見本です。右下が空欄でも、変換ノードが欠けているわけではありません。実行が正常完了すると、③の下部に変換後動画のプレーヤーと保存先が表示されます。②モデル選択ノードはこの画像では見えていません。実行前にモデル選択ノードで4x-AnimeSharp.pthを選択し、③のアップスケールモデル入力への接続を確認してください。
 
 実処理ノードは3つです。
 

@@ -1,15 +1,15 @@
 # ComfyUI Long Video AnimeSharp Upscaler / ComfyUI 長尺動画AnimeSharpアップスケーラー
 
-![Input selected, before conversion / 入力選択後・変換前の操作見本](assets/workflow.png)
+![Workflow overview before conversion / 変換前のワークフロー全体見本](assets/workflow.png)
 
-右側の「③ 変換後動画をここで再生・保存」が、拡大変換・音声維持・MP4保存を行うLongVideoUpscaleSafeノードです。この画像は入力動画を選択した実行前の操作見本です。右下が空欄でも、変換ノードが欠けているわけではありません。実行が正常完了すると、③の下部に変換後動画のプレーヤーと保存先が表示されます。画像外の②モデル選択ノードで4x-AnimeSharp.pthを選択してから実行してください。
+右側の「③ 変換後動画をここで再生・保存」が、拡大変換・音声維持・MP4保存を行うLongVideoUpscaleSafeノードです。この画像は左の説明欄と右の実行領域を含む、入力動画を選択した実行前の全体見本です。右下が空欄でも、変換ノードが欠けているわけではありません。実行が正常完了すると、③の下部に変換後動画のプレーヤーと保存先が表示されます。②モデル選択ノードはこの画像では見えていません。実行前にモデル選択ノードで4x-AnimeSharp.pthを選択し、③のアップスケールモデル入力への接続を確認してください。
 
-Node ③ on the right is LongVideoUpscaleSafe: it upscales frames, preserves audio, and saves the MP4. This screenshot shows the input selected before running. The result area is empty until a successful run; the converted-video player and save path then appear inside ③. Select 4x-AnimeSharp.pth in model-loader node ② (outside this close-up) before running.
+Node ③ on the right is LongVideoUpscaleSafe: it upscales frames, preserves audio, and saves the MP4. This overview shows the guide on the left and the execution area on the right, with the input selected before running. The result area is empty until a successful run; the converted-video player and save path then appear inside ③. Model-loader node ② is not visible in this screenshot. Before running, select 4x-AnimeSharp.pth in the model loader and check its connection to the upscale-model input of ③.
 
 [Read the release article on note / noteの公開記事を読む](https://note.com/happy_duck780/n/n0f190160e307)
 
-Current release: **v1.0.1** — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
-/ 現行リリース：**v1.0.1** — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
+Current layout release: **20260913221201** (custom node v1.0.1) — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
+/ 現行レイアウト配布：**20260913221201**（カスタムノード v1.0.1） — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
 
 A low-memory ComfyUI workflow and dedicated custom node for upscaling completed videos one frame at a time while keeping the original audio. It is suitable for finished MiniMax H3 videos and other standard video files.
 / 完成済み動画を1フレームずつ低メモリで高解像度化し、元の音声を維持するComfyUIワークフローと専用カスタムノードです。MiniMax H3の完成動画を含む一般的な動画ファイルへ使用できます。
