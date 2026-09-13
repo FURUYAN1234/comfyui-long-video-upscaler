@@ -4,6 +4,9 @@
 
 [Read the release article on note / noteの公開記事を読む](https://note.com/happy_duck780/n/n0f190160e307)
 
+Current release: **v1.0.1** — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
+/ 現行リリース：**v1.0.1** — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
+
 A low-memory ComfyUI workflow and dedicated custom node for upscaling completed videos one frame at a time while keeping the original audio. It is suitable for finished MiniMax H3 videos and other standard video files.
 / 完成済み動画を1フレームずつ低メモリで高解像度化し、元の音声を維持するComfyUIワークフローと専用カスタムノードです。MiniMax H3の完成動画を含む一般的な動画ファイルへ使用できます。
 
@@ -44,6 +47,7 @@ comfyui-long-video-upscaler/
 ├─ README.md
 ├─ MODEL_LICENSE.md
 ├─ VALIDATION.md
+├─ CHANGELOG.md
 ├─ NOTE_ARTICLE.md
 ├─ SNS_POSTS.md
 ├─ requirements.txt

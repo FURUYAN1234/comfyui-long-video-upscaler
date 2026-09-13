@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-long-video-upscaler"
 description = "Memory-safe sequential long-video upscaling with audio preservation for ComfyUI"
-version = "1.0.0"
+version = "1.0.1"
 authors = [{ name = "FURUYAN1234" }]
 license = { file = "LICENSE" }
 dependencies = ["numpy>=1.24", "opencv-python>=4.8"]

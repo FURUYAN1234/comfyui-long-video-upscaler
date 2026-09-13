@@ -116,7 +116,7 @@
       "properties": {
         "cnr_id": "comfyui-long-video-upscaler",
         "aux_id": "FURUYAN1234/comfyui-long-video-upscaler",
-        "ver": "1.0.0",
+        "ver": "1.0.1",
         "Node name for S&R": "LongVideoUpscaleSafe"
       },
       "widgets_values": [

@@ -6,10 +6,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 WORKFLOW = ROOT / 'workflows' / 'AnimeSharp_LongVideo_Safe_2x_20260913211253.json'
 EXPECTED_HASH = 'e7a7de2dafd7331c1992862bbbcd9e9712a9f9f8e6303f0aaa59b4341d359bab'
+EXPECTED_VERSION = '1.0.1'
 errors = []
 
 required = [
-    '__init__.py', 'README.md', 'MODEL_LICENSE.md', 'VALIDATION.md',
+    '__init__.py', 'README.md', 'MODEL_LICENSE.md', 'VALIDATION.md', 'CHANGELOG.md',
     'NOTE_ARTICLE.md', 'SNS_POSTS.md', 'models.json', 'requirements.txt',
     'pyproject.toml', 'LICENSE', 'assets/workflow.png',
     'assets/note-thumbnail.png', str(WORKFLOW.relative_to(ROOT))
@@ -48,6 +49,8 @@ if not models or models[0].get('name') != '4x-AnimeSharp.pth':
 if models and models[0].get('directory') != 'upscale_models':
     errors.append('wrong model directory')
 result_node = next(n for n in doc['nodes'] if n.get('type') == 'LongVideoUpscaleSafe')
+if result_node.get('properties', {}).get('ver') != EXPECTED_VERSION:
+    errors.append('workflow custom-node version does not match release version')
 if '変換後動画をここで再生・保存' not in result_node.get('title', ''):
     errors.append('result node title does not explain preview and save behavior')
 if result_node.get('size', [0, 0])[1] < 500:
@@ -56,6 +59,11 @@ if result_node.get('size', [0, 0])[1] < 500:
 model_doc = json.loads((ROOT / 'models.json').read_text(encoding='utf-8'))['models'][0]
 if model_doc.get('sha256') != EXPECTED_HASH or model_doc.get('bundled') is not False:
     errors.append('model manifest mismatch')
+
+pyproject_text = (ROOT / 'pyproject.toml').read_text(encoding='utf-8')
+version_match = re.search(r'^version\s*=\s*"([^"]+)"', pyproject_text, re.MULTILINE)
+if not version_match or version_match.group(1) != EXPECTED_VERSION:
+    errors.append('pyproject version does not match release version')
 
 node_source = (ROOT / '__init__.py').read_text(encoding='utf-8')
 for token in ['"gifs": [preview]', '"images": [{', '"animated": (True,)', '保存先 / Saved to:']:
