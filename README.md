@@ -1,6 +1,10 @@
 # ComfyUI Long Video AnimeSharp Upscaler / ComfyUI 長尺動画AnimeSharpアップスケーラー
 
-![Workflow / ワークフロー](assets/workflow.png)
+![Input selected, before conversion / 入力選択後・変換前の操作見本](assets/workflow.png)
+
+右側の「③ 変換後動画をここで再生・保存」が、拡大変換・音声維持・MP4保存を行うLongVideoUpscaleSafeノードです。この画像は入力動画を選択した実行前の操作見本です。右下が空欄でも、変換ノードが欠けているわけではありません。実行が正常完了すると、③の下部に変換後動画のプレーヤーと保存先が表示されます。画像外の②モデル選択ノードで4x-AnimeSharp.pthを選択してから実行してください。
+
+Node ③ on the right is LongVideoUpscaleSafe: it upscales frames, preserves audio, and saves the MP4. This screenshot shows the input selected before running. The result area is empty until a successful run; the converted-video player and save path then appear inside ③. Select 4x-AnimeSharp.pth in model-loader node ② (outside this close-up) before running.
 
 [Read the release article on note / noteの公開記事を読む](https://note.com/happy_duck780/n/n0f190160e307)
 
