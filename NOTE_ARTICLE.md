@@ -64,7 +64,7 @@ https://github.com/FURUYAN1234/comfyui-long-video-upscaler
 
 従来の「動画を画像へ分解」「全画像をバッチで拡大」「動画を作成」「動画を保存」を安全ノードへ統合しています。見た目のノード数を減らすことが目的ではなく、全フレーム保持を避けるための構成です。
 
-入力ノードのプレイヤーは元動画の確認用です。完成動画は`ComfyUI/output/video/AnimeSharp_2x/`へ保存されます。
+左の入力ノードのプレイヤーは元動画の確認用です。完了後は右の処理ノード内に完成動画のプレイヤーと保存先が表示され、同じ動画が`ComfyUI/output/video/AnimeSharp_2x/`へ保存されます。
 
 ## 導入方法
 
@@ -133,7 +133,7 @@ e7a7de2dafd7331c1992862bbbcd9e9712a9f9f8e6303f0aaa59b4341d359bab
 リポジトリの次のファイルをComfyUIへドラッグします。
 
 ```text
-workflows/AnimeSharp_LongVideo_Safe_2x_20260913200843.json
+workflows/AnimeSharp_LongVideo_Safe_2x_20260913211253.json
 ```
 
 ワークフロー内にも、導入、設定、モデル、保存先、実測結果の説明欄を配置しています。
@@ -146,7 +146,7 @@ workflows/AnimeSharp_LongVideo_Safe_2x_20260913200843.json
 2. `4x-AnimeSharp.pth`を選択
 3. 倍率2.0、H.264、CRF 18、fast、タイル512を確認
 4. 実行
-5. 完成MP4を最後まで映像・音声とも確認
+5. 右側の③ノード内で完成MP4を最後まで映像・音声とも確認
 
 短尺に成功してから長尺を処理すると、モデル・FFmpeg・保存先の問題を切り分けやすくなります。
 

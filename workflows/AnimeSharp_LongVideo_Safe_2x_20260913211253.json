@@ -37,7 +37,7 @@
         "input_video.mp4",
         "image"
       ],
-      "title": "① 完成動画を選択 / Select a finished video"
+      "title": "① 入力動画（ここで元動画を再生） / Input video preview"
     },
     {
       "id": 2,
@@ -88,8 +88,8 @@
         -360
       ],
       "size": [
-        440,
-        330
+        520,
+        520
       ],
       "flags": {},
       "order": 2,
@@ -127,7 +127,7 @@
         "fast",
         512
       ],
-      "title": "③ 長尺動画を安全に2倍化 / Safe long-video upscale"
+      "title": "③ 変換後動画をここで再生・保存 / Preview & save result"
     },
     {
       "id": 4,
@@ -148,7 +148,7 @@
       "title": "📘 使い方・構成・配置 / GUIDE・FLOW・FILES",
       "properties": {},
       "widgets_values": [
-        "# 概要 / OVERVIEW\n完成済みMP4を1フレームずつ拡大し、元音声を維持します。\nUpscales a finished MP4 one frame at a time and preserves its audio.\nMiniMax H3等の生成後に使う後処理です / Post-processing after H3 or other generators.\n\n## 使い方 / QUICK START\n1. ① 完成動画を選択 / Select a finished video.\n2. ② 4x-AnimeSharp.pthを選択 / Select the upscale model.\n3. ③ 初回は2.0x・H.264・CRF18・fast・tile512で実行 / Run with the defaults.\n4. 完成MP4を最後まで映像・音声確認 / Review the entire output video and audio.\n\n## 処理構成 / PROCESSING FLOW\n[完成MP4 / Finished MP4] ─video→ [1枚ずつ拡大 / frame upscale] ─→ [FFmpeg逐次書込 / stream write]\n             └────────audio────────→ [AAC] ──────────────────────────┘\n                                                ↓\n                                      [完成MP4 / Finished MP4]\n全フレームを1つの巨大な画像バッチとして保持しません。\nThe complete video is never held as one large image batch.\n\n## ファイル配置 / FILE LAYOUT\nComfyUI/\n├─ custom_nodes/comfyui-long-video-upscaler/   ← このリポジトリ / this repo\n├─ models/upscale_models/4x-AnimeSharp.pth     ← 各自取得 / download separately\n├─ input/input_video.mp4                       ← 入力例 / example input\n└─ output/video/AnimeSharp_2x/*.mp4            ← 完成動画 / finished output\n\n## 変更できる設定 / USER CONTROLS\n倍率 / Scale: 1.0-4.0（推奨 / start: 2.0）\nコーデック / Codec: H.264=互換性 / compatibility, H.265=小容量 / smaller files\nCRF: 小さいほど高画質・大容量 / Lower is higher quality and larger（推奨 / start: 18）\nPreset: fast推奨 / start at fast   Tile: 512→256→128（VRAM不足時 / on VRAM limits）\n保存名 / Output prefix: ComfyUI/output以下の相対パス / relative to ComfyUI/output\n\n## モデルと検証 / MODEL & VALIDATION\n4x-AnimeSharp by Kim2091 / CC BY-NC-SA 4.0 / モデル本体は非同梱 / model not bundled\n同じ28秒・672フレーム：旧全バッチ構成 約80GBで停止 → 本版 最大RSS 2,312.4 MiBで完走\nSame 28 s / 672 frames: old full batch stopped at about 80 GB; this node completed at 2,312.4 MiB peak RSS.\n実測は環境で変わります / Measurements vary by system.\n\n詳細ガイド / FULL GUIDE\nnote.com/happy_duck780/n/n0f190160e307\ngithub.com/FURUYAN1234/comfyui-long-video-upscaler"
+        "# 入力は左・完成動画は右 / INPUT LEFT・RESULT RIGHT\n左の①は入力動画、右の③は変換後動画のプレーヤーです。\n① on the left previews the input; ③ on the right previews the converted result.\n\n## 概要 / OVERVIEW\n完成済みMP4を1フレームずつ拡大し、元音声を維持します。\nUpscales a finished MP4 one frame at a time and preserves its audio.\nMiniMax H3等の生成後に使う後処理です / Post-processing after H3 or other generators.\n\n## 使い方 / QUICK START\n1. ① 完成動画を選択 / Select a finished video.\n2. ② 4x-AnimeSharp.pthを選択 / Select the upscale model.\n3. ③ 初回は2.0x・H.264・CRF18・fast・tile512で実行 / Run with the defaults.\n4. 完了後、右の③に出るプレーヤーで完成MP4を確認 / After completion, review the result in the player shown inside ③.\n   保存先 / Saved under: ComfyUI/output/video/AnimeSharp_2x/\n\n## 処理構成 / PROCESSING FLOW\n[完成MP4 / Finished MP4] ─video→ [1枚ずつ拡大 / frame upscale] ─→ [FFmpeg逐次書込 / stream write]\n             └────────audio────────→ [AAC] ──────────────────────────┘\n                                                ↓\n                                      [完成MP4 / Finished MP4]\n全フレームを1つの巨大な画像バッチとして保持しません。\nThe complete video is never held as one large image batch.\n\n## ファイル配置 / FILE LAYOUT\nComfyUI/\n├─ custom_nodes/comfyui-long-video-upscaler/   ← このリポジトリ / this repo\n├─ models/upscale_models/4x-AnimeSharp.pth     ← 各自取得 / download separately\n├─ input/input_video.mp4                       ← 入力例 / example input\n└─ output/video/AnimeSharp_2x/*.mp4            ← 完成動画 / finished output\n\n## 変更できる設定 / USER CONTROLS\n倍率 / Scale: 1.0-4.0（推奨 / start: 2.0）\nコーデック / Codec: H.264=互換性 / compatibility, H.265=小容量 / smaller files\nCRF: 小さいほど高画質・大容量 / Lower is higher quality and larger（推奨 / start: 18）\nPreset: fast推奨 / start at fast   Tile: 512→256→128（VRAM不足時 / on VRAM limits）\n保存名 / Output prefix: ComfyUI/output以下の相対パス / relative to ComfyUI/output\n\n## モデルと検証 / MODEL & VALIDATION\n4x-AnimeSharp by Kim2091 / CC BY-NC-SA 4.0 / モデル本体は非同梱 / model not bundled\n同じ28秒・672フレーム：旧全バッチ構成 約80GBで停止 → 本版 最大RSS 2,312.4 MiBで完走\nSame 28 s / 672 frames: old full batch stopped at about 80 GB; this node completed at 2,312.4 MiB peak RSS.\n実測は環境で変わります / Measurements vary by system.\n\n詳細ガイド / FULL GUIDE\nnote.com/happy_duck780/n/n0f190160e307\ngithub.com/FURUYAN1234/comfyui-long-video-upscaler"
       ],
       "color": "#24465c",
       "bgcolor": "#142b39"
@@ -175,12 +175,12 @@
   "groups": [
     {
       "id": 1,
-      "title": "▶ 実行する3ノード / THREE NODES TO RUN",
+      "title": "▶ 左で入力確認 → 右で完成確認 / INPUT LEFT → RESULT RIGHT",
       "bounding": [
         -40,
         -440,
-        950,
-        560
+        1050,
+        650
       ],
       "color": "#3f789e",
       "font_size": 28,
@@ -192,10 +192,10 @@
     "workflowRendererVersion": "LG",
     "frontendVersion": "1.51.10",
     "ds": {
-      "scale": 0.4,
+      "scale": 0.98,
       "offset": [
-        908,
-        665
+        920,
+        660
       ]
     }
   },

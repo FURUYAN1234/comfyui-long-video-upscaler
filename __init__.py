@@ -17,6 +17,11 @@ from comfy import model_management
 class LongVideoUpscaleSafe:
     """Stream video frames through an upscale model without retaining the full video in RAM."""
 
+    DESCRIPTION = (
+        "完成動画を逐次アップスケールし、このノード内に再生プレーヤーと保存先を表示します。 / "
+        "Streams the upscale and shows the finished video plus its save location in this node."
+    )
+
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -190,9 +195,35 @@ class LongVideoUpscaleSafe:
                 os.unlink(temporary_source)
         if error:
             raise error
+        output_root = Path(folder_paths.get_output_directory()).resolve()
+        relative = output_path.resolve().relative_to(output_root)
+        subfolder = relative.parent.as_posix() if relative.parent != Path(".") else ""
+        preview = {
+            "filename": relative.name,
+            "subfolder": subfolder,
+            "type": "output",
+            "format": f"video/{codec}-mp4",
+        }
+        saved_to = f"ComfyUI/output/{relative.as_posix()}"
         print(f"LongVideoUpscaleSafe saved {processed} frames to {output_path}")
-        return (str(output_path),)
+        return {
+            "ui": {
+                # ``gifs`` is the established Video Helper Suite video-preview
+                # payload. ``images`` + ``animated`` is ComfyUI's native
+                # animated-preview representation. Supplying both keeps the
+                # result visible across current frontend variants.
+                "gifs": [preview],
+                "images": [{
+                    "filename": relative.name,
+                    "subfolder": subfolder,
+                    "type": "output",
+                }],
+                "animated": (True,),
+                "text": [f"保存先 / Saved to: {saved_to}"],
+            },
+            "result": (str(output_path),),
+        }
 
 
 NODE_CLASS_MAPPINGS = {"LongVideoUpscaleSafe": LongVideoUpscaleSafe}
-NODE_DISPLAY_NAME_MAPPINGS = {"LongVideoUpscaleSafe": "長尺動画アップスケール（安全・逐次処理）"}
+NODE_DISPLAY_NAME_MAPPINGS = {"LongVideoUpscaleSafe": "変換して結果を再生・保存（長尺安全）"}

@@ -15,6 +15,9 @@
 A 3.000-second, 864×480, 24 fps, 72-frame video completed in 64.861 seconds and produced 1728×960 output with AAC 32 kHz stereo audio.
 / 3.000秒、864×480、24fps、72フレームの動画を64.861秒で処理し、1728×960、AAC 32kHzステレオの出力を確認しました。
 
+After the result-preview update, a separate 0.500-second, 12-frame H.264/AAC input was run through the installed workflow. It completed in 12.695 seconds and produced a 1728×960, 24 fps, 0.500-second H.264/AAC MP4. The ComfyUI screen showed the input player in node ① and a separate finished-video player in node ③ at the same time. The API history also reported `gifs`, native animated `images`, and `保存先 / Saved to` output metadata.
+/ 結果プレビュー更新後、H.264/AAC、0.500秒・12フレームの別入力を導入済みワークフローで実行しました。12.695秒で完了し、1728×960、24fps、0.500秒のH.264/AAC MP4を生成しました。ComfyUI画面では①の入力プレーヤーと③の完成動画プレーヤーが同時に表示されました。API履歴でも`gifs`、標準の動画`images`、`保存先 / Saved to`の出力情報を確認しました。
+
 ## Full test / 長尺検証
 
 A 28.000-second, 864×480, 24 fps, 672-frame H.264 input with AAC 32 kHz stereo audio completed in approximately 563.5 seconds. The output was H.264, 1728×960, 24 fps, 28.000 seconds, 672 video frames, and 876 audio frames.

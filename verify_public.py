@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-WORKFLOW = ROOT / 'workflows' / 'AnimeSharp_LongVideo_Safe_2x_20260913200843.json'
+WORKFLOW = ROOT / 'workflows' / 'AnimeSharp_LongVideo_Safe_2x_20260913211253.json'
 EXPECTED_HASH = 'e7a7de2dafd7331c1992862bbbcd9e9712a9f9f8e6303f0aaa59b4341d359bab'
 errors = []
 
@@ -33,6 +33,8 @@ for phrase in ['処理構成 / PROCESSING FLOW', 'ファイル配置 / FILE LAYO
         errors.append(f'missing bilingual guide section: {phrase}')
 if 'ComfyUI/' not in guide_text or 'custom_nodes/' not in guide_text or 'upscale_models/' not in guide_text:
     errors.append('workflow file-layout diagram is incomplete')
+if '入力は左・完成動画は右 / INPUT LEFT・RESULT RIGHT' not in guide_text:
+    errors.append('workflow does not clearly distinguish input and result locations')
 if not doc.get('extra', {}).get('ds'):
     errors.append('workflow has no saved viewport for showing the guide cards')
 
@@ -45,10 +47,20 @@ if not models or models[0].get('name') != '4x-AnimeSharp.pth':
     errors.append('missing model metadata')
 if models and models[0].get('directory') != 'upscale_models':
     errors.append('wrong model directory')
+result_node = next(n for n in doc['nodes'] if n.get('type') == 'LongVideoUpscaleSafe')
+if '変換後動画をここで再生・保存' not in result_node.get('title', ''):
+    errors.append('result node title does not explain preview and save behavior')
+if result_node.get('size', [0, 0])[1] < 500:
+    errors.append('result node is too small for the embedded video player')
 
 model_doc = json.loads((ROOT / 'models.json').read_text(encoding='utf-8'))['models'][0]
 if model_doc.get('sha256') != EXPECTED_HASH or model_doc.get('bundled') is not False:
     errors.append('model manifest mismatch')
+
+node_source = (ROOT / '__init__.py').read_text(encoding='utf-8')
+for token in ['"gifs": [preview]', '"images": [{', '"animated": (True,)', '保存先 / Saved to:']:
+    if token not in node_source:
+        errors.append(f'missing result-preview implementation: {token}')
 
 for pattern in ['*.pth', '*.pt', '*.safetensors', '*.onnx', '*.mp4', '*.mov', '*.mkv', '*.webm', '*.wav', '*.mp3']:
     for path in ROOT.rglob(pattern):
