@@ -1,5 +1,7 @@
 # Model license / モデルライセンス
 
+Current licenses and earlier grants remain in force; see [version/file/rights-holder scope](LICENSE_SCOPE.md) and [FURU usage guidance](FURU_TERMS.md). / 現行ライセンスと従前の許諾を維持します。[版・ファイル・権利者の範囲](LICENSE_SCOPE.md)と[FURUの利用案内](FURU_TERMS.md)を参照してください。
+
 This repository does not contain `4x-AnimeSharp.pth`. The included workflow only records the model name, destination, and download source.
 / このリポジトリは`4x-AnimeSharp.pth`本体を収録しません。同梱ワークフローにはモデル名、配置先、取得元だけを記録しています。
 
