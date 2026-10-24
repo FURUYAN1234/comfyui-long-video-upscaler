@@ -1,6 +1,14 @@
 # Validation / 検証
 
-## Environment / 環境
+## v1.0.2 safety checks / v1.0.2安全性検査
+
+Nineteen isolated regression tests cover pre-existing partial files, input/final aliases, dotted prefixes, files appearing during encoding, four concurrent successes and four concurrent failures, encoder startup/inference/encoding errors, empty or invalid video, publication errors and temporary-source cleanup. All test data is synthetic. / 19件の分離した回帰テストで、既存一時ファイル、入力と完成先の一致・別名、ドット付き出力名、処理中の完成先出現、4ジョブの同時成功・同時失敗、エンコーダ起動・推論・書き出しエラー、空・不正動画、完成先確定エラー、一時入力の後始末を検査します。すべて合成テストデータです。
+
+The real-runtime check uses the installed ComfyUI Python, CUDA, 4x-AnimeSharp and ffmpeg with a generated 0.5-second, 64×48, 8 fps H.264/AAC source. It checks 128×96 output, four video frames, preserved AAC audio, preview metadata, unchanged input hashes and owned-partial cleanup on success and injected inference failure. / 実処理検査は導入済みComfyUIのPython、CUDA、4x-AnimeSharp、ffmpegと、生成した0.5秒・64×48・8fpsのH.264／AAC入力を使います。128×96出力、映像4フレーム、AAC音声の存在、プレビュー情報、入力ハッシュの不変、成功時・推論失敗注入時の自作一時ファイルの後始末を確認します。
+
+This patch has not rerun the long-duration or OOM tests, the ComfyUI HTTP workflow or browser preview, or visual/listening review. Earlier measurements below describe earlier versions. / 今回の修正では長尺・OOMテスト、ComfyUI HTTPワークフローとブラウザープレビュー、映像の目視・音声の試聴は再実施していません。以下の過去測定値は以前の版のものです。
+
+## Earlier environment / 過去の検証環境
 
 - OS / OS構成: WSL2 Ubuntu on Windows
 - GPU / GPU: NVIDIA GeForce RTX 5080, 16 GB VRAM

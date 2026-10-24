@@ -5,7 +5,7 @@
 ## Usage terms / 利用条件
 
 > [!NOTE]
-> **Current scope / 現行の適用範囲:** Layout 20260913221201 / node v1.0.1: GPL-3.0 for the distributed code/workflow. / 配布コード・ワークフローはGPL-3.0。
+> **Current scope / 現行の適用範囲:** Layout 20260913221201 / node v1.0.2: GPL-3.0 for the distributed code/workflow. / 配布コード・ワークフローはGPL-3.0。
 >
 > Source code is public and software use is free. Personal, business, internal and commissioned use, and free integration/provision require no application, prior contact or permission from FURU. Third-party and API terms remain separate. / ソースコード公開・利用無料。個人利用、業務、社内利用、受託制作、無料の組み込み・無料提供には、申請・事前連絡・FURUの許可は不要です。第三者とAPIの条件は別です。
 >
@@ -38,8 +38,7 @@ Node ③ on the right is LongVideoUpscaleSafe: it upscales frames, preserves aud
 
 [Read the release article on note / noteの公開記事を読む](https://note.com/happy_duck780/n/n0f190160e307)
 
-Current layout release: **20260913221201** (custom node v1.0.1) — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
-/ 現行レイアウト配布：**20260913221201**（カスタムノード v1.0.1） — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/latest)
+Current release: **v1.0.2** (layout 20260913221201) / 現行配布：**v1.0.2**（レイアウト 20260913221201） — [GitHub Releases](https://github.com/FURUYAN1234/comfyui-long-video-upscaler/releases/tag/v1.0.2)
 
 A low-memory ComfyUI workflow and dedicated custom node for upscaling completed videos one frame at a time while keeping the original audio. It is suitable for finished MiniMax H3 videos and other standard video files.
 / 完成済み動画を1フレームずつ低メモリで高解像度化し、元の音声を維持するComfyUIワークフローと専用カスタムノードです。MiniMax H3の完成動画を含む一般的な動画ファイルへ使用できます。
@@ -65,7 +64,7 @@ A conventional video-upscale graph may expand the entire video into one image ba
 - **Guidance on the canvas:** one consolidated English/Japanese guide card explains the run order, processing map, editable settings, installation layout, model license, output, and measured validation. / **キャンバス内ガイド：** 1枚に統合した英日説明欄に、実行順、処理構成図、設定、導入先のファイル構成図、モデルライセンス、保存先、実測結果を記載しています。
 - **Result preview in place:** after processing, the finished video player and save location appear in the right-hand result node. / **完成動画をその場で確認：** 処理完了後、右側の結果ノード内に完成動画プレーヤーと保存先を表示します。
 - **VRAM fallback:** if full-frame inference runs out of VRAM, tiled inference retries with progressively smaller tiles. / **VRAM不足時の分割処理：** 全画面推論でVRAM不足になった場合はタイルを段階的に縮小して再試行します。
-- **Safe output handling:** rejects paths outside `ComfyUI/output`, writes to a partial file, and renames it after success. / **安全な出力処理：** `ComfyUI/output` 外へのパスを拒否し、一時ファイルへ書いた後、成功時に完成名へ変更します。
+- **Safe output handling:** rejects paths outside `ComfyUI/output`, reserves a unique job-only partial file, and publishes without overwriting existing files or the input. Only that job's temporary files are removed on failure. / **安全な出力処理：** `ComfyUI/output` 外へのパスを拒否し、ジョブ専用の固有一時ファイルを排他的に確保します。既存ファイルや入力を上書きせず、失敗時はそのジョブの一時ファイルだけを削除します。
 - **Local processing:** no cloud API, API key, or telemetry is used by this node. / **ローカル処理：** このノードはクラウドAPI、APIキー、テレメトリーを使用しません。
 
 ## Included files / 収録内容
@@ -110,6 +109,10 @@ The workflow opens with one consolidated bilingual Markdown guide on the left an
 - `ffmpeg` and `ffprobe` available on `PATH`. / `PATH`から実行できる`ffmpeg`と`ffprobe`。
 - Python packages in `requirements.txt`, installed into ComfyUI's actual Python environment. / `requirements.txt`記載のPythonライブラリを、ComfyUIが実際に使うPythonへ導入します。
 - `4x-AnimeSharp.pth` in `ComfyUI/models/upscale_models/`. / `ComfyUI/models/upscale_models/`へ配置した`4x-AnimeSharp.pth`。
+
+The output filesystem must support hard links (for example, ext4 or NTFS). An unsupported filesystem fails safely without replacing existing files. / 出力先にはハードリンク対応のファイルシステム（ext4、NTFSなど）が必要です。非対応の場合は既存ファイルを上書きせずエラーになります。
+
+For v1.0.2 regression checks, run `python -m unittest discover -s tests -v` and `python verify_public.py`. / v1.0.2の回帰検査は `python -m unittest discover -s tests -v` と `python verify_public.py` で実行します。
 
 ## Installation / 導入方法
 

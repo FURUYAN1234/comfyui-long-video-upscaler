@@ -1,10 +1,10 @@
 * text=auto eol=lf
 *.py text eol=lf
-*.json text eol=lf
+*.json -text
 *.md text eol=lf
 *.toml text eol=lf
-requirements.txt text eol=lf
-LICENSE text eol=lf
+requirements.txt -text
+LICENSE -text
 *.png binary
 *.jpg binary
 *.jpeg binary
@@ -12,3 +12,4 @@ LICENSE text eol=lf
 *.pt -text
 *.safetensors -text
 *.onnx -text
+custom_nodes/** -text

@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 WORKFLOW = ROOT / 'workflows' / 'AnimeSharp_LongVideo_Safe_2x_20260913211253.json'
 EXPECTED_HASH = 'e7a7de2dafd7331c1992862bbbcd9e9712a9f9f8e6303f0aaa59b4341d359bab'
-EXPECTED_VERSION = '1.0.1'
+EXPECTED_VERSION = '1.0.2'
 errors = []
 
 required = [

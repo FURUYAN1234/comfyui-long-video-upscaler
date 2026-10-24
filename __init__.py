@@ -57,18 +57,18 @@ class LongVideoUpscaleSafe:
         raise TypeError(f"Unsupported video source: {type(source).__name__}")
 
     @staticmethod
-    def _unique_output(prefix, extension):
+    def _unique_output(prefix, extension, source_path):
         output_root = Path(folder_paths.get_output_directory()).resolve()
         clean = prefix.replace("\\", "/").lstrip("/")
         relative = Path(clean)
         if ".." in relative.parts:
             raise ValueError("output_prefix must stay inside the ComfyUI output directory")
-        base = output_root / relative
+        base = (output_root / relative).with_suffix(extension)
         base.parent.mkdir(parents=True, exist_ok=True)
-        candidate = base.with_suffix(extension)
+        candidate = base
         index = 1
-        while candidate.exists():
-            candidate = base.with_name(f"{base.name}_{index:05d}").with_suffix(extension)
+        while os.path.lexists(candidate) or candidate.resolve() == Path(source_path).resolve():
+            candidate = base.with_name(f"{base.stem}_{index:05d}{extension}")
             index += 1
         return candidate
 
@@ -124,41 +124,42 @@ class LongVideoUpscaleSafe:
         preset = エンコード速度
         tile_size = タイルサイズ
         source_path, temporary_source = self._materialize_source(video)
-        output_path = self._unique_output(output_prefix, ".mp4")
-        partial_path = output_path.with_name(output_path.stem + ".partial" + output_path.suffix)
-        cap = cv2.VideoCapture(source_path)
-        if not cap.isOpened():
-            if temporary_source:
-                os.unlink(temporary_source)
-            raise RuntimeError(f"Could not open video: {source_path}")
-
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = float(cap.get(cv2.CAP_PROP_FPS)) or 30.0
-        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        target_width, target_height = self._target_size(width, height, upscale_factor)
-        codec_name = "libx264" if codec == "h264" else "libx265"
-        command = [
-            "ffmpeg", "-y", "-loglevel", "error",
-            "-f", "rawvideo", "-pix_fmt", "rgb24",
-            "-s:v", f"{target_width}x{target_height}", "-r", f"{fps:.12g}", "-i", "pipe:0",
-            "-i", source_path,
-            "-map", "0:v:0", "-map", "1:a?",
-            "-c:v", codec_name, "-preset", preset, "-crf", str(crf), "-pix_fmt", "yuv420p",
-            "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart",
-            str(partial_path),
-        ]
-
-        device = model_management.get_torch_device()
+        cap = None
+        process = None
+        partial_path = None
         try:
-            upscale_model.to(device, dtype=torch.float16)
-        except TypeError:
-            upscale_model.to(device)
-        pbar = comfy.utils.ProgressBar(max(1, frame_count))
-        process = subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        processed = 0
-        error = None
-        try:
+            output_path = self._unique_output(output_prefix, ".mp4", source_path)
+            cap = cv2.VideoCapture(source_path)
+            if not cap.isOpened():
+                raise RuntimeError(f"Could not open video: {source_path}")
+
+            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fps = float(cap.get(cv2.CAP_PROP_FPS)) or 30.0
+            frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            target_width, target_height = self._target_size(width, height, upscale_factor)
+            codec_name = "libx264" if codec == "h264" else "libx265"
+            device = model_management.get_torch_device()
+            try:
+                upscale_model.to(device, dtype=torch.float16)
+            except TypeError:
+                upscale_model.to(device)
+            pbar = comfy.utils.ProgressBar(max(1, frame_count))
+            fd, name = tempfile.mkstemp(prefix=".long-video-", suffix=".partial.mp4", dir=output_path.parent)
+            partial_path = Path(name)
+            os.close(fd)
+            command = [
+                "ffmpeg", "-y", "-loglevel", "error",
+                "-f", "rawvideo", "-pix_fmt", "rgb24",
+                "-s:v", f"{target_width}x{target_height}", "-r", f"{fps:.12g}", "-i", "pipe:0",
+                "-i", source_path,
+                "-map", "0:v:0", "-map", "1:a?",
+                "-c:v", codec_name, "-preset", preset, "-crf", str(crf), "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart",
+                str(partial_path),
+            ]
+            process = subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+            processed = 0
             while True:
                 ok, frame = cap.read()
                 if not ok:
@@ -174,27 +175,32 @@ class LongVideoUpscaleSafe:
                 raise RuntimeError(f"ffmpeg failed ({return_code}): {stderr[-4000:]}")
             if processed == 0:
                 raise RuntimeError("Input video contained no decodable frames")
-            partial_path.replace(output_path)
-        except Exception as exc:
-            error = exc
-            if process.stdin and not process.stdin.closed:
+            while True:
                 try:
-                    process.stdin.close()
-                except Exception:
-                    pass
-            if process.poll() is None:
-                process.kill()
-            process.wait()
-            if partial_path.exists():
-                partial_path.unlink()
+                    # Publish atomically without replacing a file created by another job.
+                    os.link(partial_path, output_path)
+                    break
+                except FileExistsError:
+                    output_path = self._unique_output(output_prefix, ".mp4", source_path)
         finally:
-            cap.release()
+            if process is not None:
+                if process.poll() is None:
+                    process.kill()
+                if process.stdin and not process.stdin.closed:
+                    try:
+                        process.stdin.close()
+                    except BrokenPipeError:
+                        pass
+                process.wait()
+                process.stderr.close()
+            if cap is not None:
+                cap.release()
+            if partial_path is not None:
+                partial_path.unlink(missing_ok=True)
+            if temporary_source:
+                Path(temporary_source).unlink(missing_ok=True)
             upscale_model.cpu()
             model_management.soft_empty_cache()
-            if temporary_source and os.path.exists(temporary_source):
-                os.unlink(temporary_source)
-        if error:
-            raise error
         output_root = Path(folder_paths.get_output_directory()).resolve()
         relative = output_path.resolve().relative_to(output_root)
         subfolder = relative.parent.as_posix() if relative.parent != Path(".") else ""
